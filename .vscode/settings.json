@@ -1,0 +1,29 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.formatOnSave": true,
+  // let ESLint own import ordering; disable VS Code's own organizeImports to avoid conflicts
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "editor.trimAutoWhitespace": true,
+  "eslint.validate": ["typescript", "typescriptreact", "javascript"],
+  "eslint.useFlatConfig": true,
+  "[typescript]": {
+    "editor.defaultFormatter": null
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": null
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": null
+  },
+  "search.exclude": {
+    "dist/**": true,
+    "node_modules/**": true
+  }
+}

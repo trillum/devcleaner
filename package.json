@@ -1,0 +1,70 @@
+{
+  "name": "devclean",
+  "version": "1.0.0",
+  "description": "CLI tool to find and clean developer caches, build artifacts, and temporary files (no disk space = no coding)",
+  "main": "dist/index.js",
+  "private": false,
+  "bin": {
+    "devclean": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsx src/index.tsx",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "keywords": [
+    "cleaner",
+    "dev",
+    "cli",
+    "storage",
+    "cache",
+    "space",
+    "node_modules",
+    "disk",
+    "cleanup"
+  ],
+  "author": "trillum",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trillum/devclean.git"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.8.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "dependencies": {
+    "fast-glob": "3.3.3",
+    "fs-extra": "^11.3.5",
+    "ink": "7.1.0",
+    "ink-spinner": "^5.0.0",
+    "react": "19.2.7",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "26.0.0",
+    "@types/react": "19.2.17",
+    "eslint": "^9.39.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "globals": "^17.6.0",
+    "tsx": "4.22.4",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.61.1",
+    "vitest": "^3.2.3"
+  }
+}
