@@ -31,6 +31,6 @@ jobs:
 
       - run: pnpm run build
 
-      - run: pnpm publish --no-git-checks --provenance --access public
+      - run: pnpm publish --filter @trillum/devcleaner --no-git-checks --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
