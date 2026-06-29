@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import type { ScanItem } from "../src/cli/types.js";
 import { deleteItems } from "../src/engine/delete.js";
@@ -24,7 +24,7 @@ function makeTempItem(tmpDir: string, id: string): ScanItem {
 
 describe("deleteItems", () => {
   it("deletes a real directory", async () => {
-    const dir = path.join(os.tmpdir(), "devclean-del-" + Date.now());
+    const dir = path.join(os.tmpdir(), "devcleaner-del-" + Date.now());
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(path.join(dir, "f.txt"), "data");
 
@@ -40,7 +40,7 @@ describe("deleteItems", () => {
   });
 
   it("continues on failure without crashing", async () => {
-    const nonexistent = path.join(os.tmpdir(), "devclean-nope-" + Date.now());
+    const nonexistent = path.join(os.tmpdir(), "devcleaner-nope-" + Date.now());
     const item = makeTempItem(nonexistent, "fail-1");
 
     const report = await deleteItems([item]);
@@ -49,8 +49,8 @@ describe("deleteItems", () => {
   });
 
   it("reports progress correctly", async () => {
-    const dir1 = path.join(os.tmpdir(), "devclean-prog1-" + Date.now());
-    const dir2 = path.join(os.tmpdir(), "devclean-prog2-" + Date.now());
+    const dir1 = path.join(os.tmpdir(), "devcleaner-prog1-" + Date.now());
+    const dir2 = path.join(os.tmpdir(), "devcleaner-prog2-" + Date.now());
     await fs.mkdir(dir1, { recursive: true });
     await fs.mkdir(dir2, { recursive: true });
 
@@ -68,7 +68,7 @@ describe("deleteItems", () => {
   });
 
   it("handles batch with mixed results", async () => {
-    const realDir = path.join(os.tmpdir(), "devclean-mixed-" + Date.now());
+    const realDir = path.join(os.tmpdir(), "devcleaner-mixed-" + Date.now());
     await fs.mkdir(realDir, { recursive: true });
     await fs.writeFile(path.join(realDir, "x.txt"), "content");
 

@@ -11,7 +11,7 @@ export default function DoneScreen() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      console.log("\nThank you for using devclean, see you soon!\n");
+      console.log("\nThank you for using devcleaner, see you soon!\n");
       process.exit(0);
     }, 2000);
     return () => clearTimeout(t);

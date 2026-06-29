@@ -1,11 +1,11 @@
 {
-  "name": "devclean",
+  "name": "@trillum/devcleaner",
   "version": "0.1.0",
   "description": "CLI tool to find and clean developer caches, build artifacts, and temporary files (no disk space = no coding)",
   "main": "dist/index.js",
   "private": false,
   "bin": {
-    "devclean": "dist/index.js"
+    "devcleaner": "dist/index.js"
   },
   "files": [
     "dist"
@@ -34,7 +34,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/trillum/devclean.git"
+    "url": "https://github.com/trillum/devcleaner.git"
   },
   "devEngines": {
     "packageManager": {

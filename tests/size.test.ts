@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 
-import { describe, expect,it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { formatSize, getDirSize } from "../src/engine/size.js";
 
@@ -38,12 +38,12 @@ describe("formatSize", () => {
 
 describe("getDirSize", () => {
   it("returns 0 for non-existent directory", async () => {
-    const size = await getDirSize(path.join(os.tmpdir(), "devclean-nonexistent-" + Date.now()));
+    const size = await getDirSize(path.join(os.tmpdir(), "devcleaner-nonexistent-" + Date.now()));
     expect(size).toBe(0);
   });
 
   it("calculates size of a real directory", async () => {
-    const tmpDir = path.join(os.tmpdir(), "devclean-test-size-" + Date.now());
+    const tmpDir = path.join(os.tmpdir(), "devcleaner-test-size-" + Date.now());
     await fs.mkdir(tmpDir, { recursive: true });
 
     const content = "x".repeat(1000);
@@ -57,7 +57,7 @@ describe("getDirSize", () => {
   });
 
   it("handles nested directories", async () => {
-    const tmpDir = path.join(os.tmpdir(), "devclean-test-nested-" + Date.now());
+    const tmpDir = path.join(os.tmpdir(), "devcleaner-test-nested-" + Date.now());
     const subDir = path.join(tmpDir, "sub");
     await fs.mkdir(subDir, { recursive: true });
 

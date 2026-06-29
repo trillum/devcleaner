@@ -35,7 +35,7 @@ export default function SummaryScreen() {
 
   useInput((input, key) => {
     if (input === "q" || input === "Q") {
-      console.log("\nThank you for using devclean, see you soon!\n");
+      console.log("\nThank you for using devcleaner, see you soon!\n");
       process.exit(0);
     }
 

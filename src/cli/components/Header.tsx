@@ -9,7 +9,7 @@ export default function Header({ title }: { title?: string }) {
     <Box flexDirection="column" marginBottom={1}>
       <Text color={COLORS.brandDim} dimColor>{line}</Text>
       <Text>
-        <Text bold color={COLORS.brand}> devclean</Text>
+        <Text bold color={COLORS.brand}> devcleaner</Text>
         {title ? <Text dimColor> / {title}</Text> : null}
       </Text>
       <Text color={COLORS.brandDim} dimColor>{line}</Text>

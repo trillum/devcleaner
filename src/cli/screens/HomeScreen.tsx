@@ -11,7 +11,7 @@ export default function HomeScreen() {
 
   useInput((input) => {
     if (input === "q" || input === "Q") {
-      console.log("\nThank you for using devclean, see you soon!\n");
+      console.log("\nThank you for using devcleaner, see you soon!\n");
       process.exit(0);
     }
     if (input === "s" || input === "S") {
