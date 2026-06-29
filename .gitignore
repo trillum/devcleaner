@@ -8,3 +8,4 @@ Thumbs.db
 .env.*
 coverage/
 ideas
+pnpm-workspace.yaml
