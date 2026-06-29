@@ -67,4 +67,4 @@ The list it shows depends on your OS and installed development tools, so some it
 
 ## Contributing
 
-Found a bug, have an idea or want to add more scan targets to clean? Open an issue or pull request at the [GitHub repo][repo].
+Found a bug, have an idea or want to add more scan targets to clean? Open an [issue](https://github.com/trillum/devclean/issues) or [pull request](https://github.com/trillum/devclean/pulls). 
