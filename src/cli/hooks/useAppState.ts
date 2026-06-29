@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { scan } from "../../engine/scan.js";
+import { scan, type ScanOptions } from "../../engine/scan.js";
 import type {
   Category,
   DeletionReport,
@@ -68,7 +68,13 @@ export interface AppState {
 
 const AppStateContext = createContext<AppState | null>(null);
 
-export function AppStateProvider({ children }: { children: React.ReactNode }) {
+export function AppStateProvider({
+  children,
+  scanOptions = {},
+}: {
+  children: React.ReactNode;
+  scanOptions?: ScanOptions;
+}) {
   const [screen, setScreen] = useState<Screen>("home");
   const [scanItems, setScanItemsRaw] = useState<ScanItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>("node");
@@ -201,7 +207,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         const items = await scan((p) => {
           setScanPhase(p.phase);
           setScanFound(p.found);
-        });
+        }, scanOptions);
 
         setScanItems(items);
 
@@ -229,7 +235,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         setScanStatus("done");
       }
     })();
-  }, [setScanItems]);
+  }, [setScanItems, scanOptions]);
 
   // kick off the background scan as soon as the app mounts
   useEffect(() => {
