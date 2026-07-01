@@ -45,7 +45,7 @@ export default function HomeScreen() {
 
       <Box paddingLeft={1} marginTop={1}>
         <Text dimColor>
-          Looks for node_modules, npm/pnpm/yarn caches, Rust
+          Looks for node_modules, npm/yarn caches, Rust
         </Text>
       </Box>
       <Box paddingLeft={1}>

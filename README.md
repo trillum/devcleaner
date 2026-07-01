@@ -47,7 +47,7 @@ Every item is marked with a risk level so you know what is safe to remove and wh
 
 `devcleaner` looks for files from many tools:
 
-- **Node.js** - `node_modules`, Next.js, Turborepo, Vite, Nuxt, SvelteKit, Astro, Parcel, Expo, Docusaurus, Angular caches, coverage reports, and the npm, pnpm, yarn, bun, and deno caches
+- **Node.js** - `node_modules`, Next.js, Turborepo, Vite, Nuxt, SvelteKit, Astro, Parcel, Expo, Docusaurus, Angular caches, coverage reports, and the npm, yarn, bun, and deno caches
 - **Rust** - `target` folders, cargo registry, cargo git checkouts, sccache, rustup toolchains
 - **Python** - `__pycache__`, pytest, mypy, ruff caches, tox/nox envs, virtualenvs, pip, pipenv, poetry, conda caches, pyenv versions
 - **Docker** - Docker Desktop VM data, cache, and logs

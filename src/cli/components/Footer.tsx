@@ -31,18 +31,18 @@ export default function Footer({ hints }: FooterProps) {
   const hintNodes =
     hints && hints.length > 0
       ? hints.map((h, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <Text dimColor>  </Text>}
-            {renderHint(h, i)}
-          </React.Fragment>
-        ))
+        <React.Fragment key={i}>
+          {i > 0 && <Text dimColor>  </Text>}
+          {renderHint(h, i)}
+        </React.Fragment>
+      ))
       : null;
 
   return (
     <Box marginTop={1} paddingLeft={1} paddingRight={1}>
       {hintNodes}
       <Box flexGrow={1} />
-      <Text dimColor color={COLORS.brandDim}>v{VERSION}</Text>
+      <Text dimColor color={COLORS.brandDim}> v{VERSION}</Text>
       {columns < 40 ? null : <Text> </Text>}
     </Box>
   );
