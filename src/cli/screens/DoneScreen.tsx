@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 
 import { formatSize } from "../../engine/size.js";
 import Header from "../components/Header.js";
+import { exitApp } from "../exit.js";
 import { useAppState } from "../hooks/useAppState.js";
 import { COLORS } from "../theme.js";
 
@@ -11,8 +12,7 @@ export default function DoneScreen() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      console.log("\nThank you for using devcleaner, see you soon!\n");
-      process.exit(0);
+      exitApp();
     }, 2000);
     return () => clearTimeout(t);
   }, []);

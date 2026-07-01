@@ -3,6 +3,7 @@ import React from "react";
 
 import Footer from "../components/Footer.js";
 import Header from "../components/Header.js";
+import { exitApp } from "../exit.js";
 import { useAppState } from "../hooks/useAppState.js";
 import { COLORS } from "../theme.js";
 
@@ -11,8 +12,7 @@ export default function HomeScreen() {
 
   useInput((input) => {
     if (input === "q" || input === "Q") {
-      console.log("\nThank you for using devcleaner, see you soon!\n");
-      process.exit(0);
+      exitApp();
     }
     if (input === "s" || input === "S") {
       // scan runs in the background from app launch; jump to results if it's

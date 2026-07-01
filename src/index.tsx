@@ -2,10 +2,10 @@
 import { statSync } from "node:fs";
 
 import { render } from "ink";
-import React from "react";
 
 import App from "./app.js";
 import { parseArgs } from "./cli/args.js";
+import Centered from "./cli/components/Centered.js";
 import { AppStateProvider } from "./cli/hooks/useAppState.js";
 
 const args = parseArgs(process.argv);
@@ -38,8 +38,9 @@ const scanOptions = {
 process.stdout.write("\x1B[2J\x1B[3J\x1B[H");
 
 render(
-  React.createElement(AppStateProvider, {
-    scanOptions,
-    children: React.createElement(App),
-  }),
+  <AppStateProvider scanOptions={scanOptions}>
+    <Centered>
+      <App />
+    </Centered>
+  </AppStateProvider>,
 );

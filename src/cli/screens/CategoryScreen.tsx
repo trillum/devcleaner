@@ -1,4 +1,4 @@
-import { Box, Text, useInput } from "ink";
+import { Box, Text, useInput, useStdout } from "ink";
 import React from "react";
 
 import { formatSize } from "../../engine/size.js";
@@ -6,11 +6,16 @@ import Footer from "../components/Footer.js";
 import Header from "../components/Header.js";
 import ScrollList from "../components/ScrollList.js";
 import Tabs from "../components/Tabs.js";
+import { exitApp } from "../exit.js";
 import { useAppState } from "../hooks/useAppState.js";
 import { COLORS } from "../theme.js";
 import { ALL_CATEGORIES } from "../types.js";
 
 const MAX_VISIBLE = 10;
+const MIN_VISIBLE = 2;
+const FIXED_CHROME_ROWS = 11;
+const LIST_HEADER_ROWS = 2;
+const MARKER_ROWS = 2;
 
 export default function CategoryScreen() {
   const {
@@ -47,10 +52,23 @@ export default function CategoryScreen() {
     subcategoryCounts.global > 0 &&
     subcategoryCounts.project > 0;
 
+  const { stdout } = useStdout();
+  const termRows = stdout?.rows ?? 24;
+  const hasTabsSubcatRow =
+    subcategoryCounts.global > 0 && subcategoryCounts.project > 0;
+  const reservedRows =
+    FIXED_CHROME_ROWS +
+    (hasTabsSubcatRow ? 1 : 0) +
+    (showSubHeaders ? LIST_HEADER_ROWS : 0) +
+    MARKER_ROWS;
+  const maxVisible = Math.max(
+    MIN_VISIBLE,
+    Math.min(MAX_VISIBLE, termRows - reservedRows),
+  );
+
   useInput((input, key) => {
     if (input === "q" || input === "Q") {
-      console.log("\nThank you for using devcleaner, see you soon!\n");
-      process.exit(0);
+      exitApp();
     }
 
     if (key.upArrow) {
@@ -62,7 +80,7 @@ export default function CategoryScreen() {
       const max = Math.max(0, items.length - 1);
       const next = Math.min(max, cursor + 1);
       setCursor(next);
-      if (next >= scrollOffset + MAX_VISIBLE) setScrollOffset(next - MAX_VISIBLE + 1);
+      if (next >= scrollOffset + maxVisible) setScrollOffset(next - maxVisible + 1);
     }
 
     if (key.leftArrow) {
@@ -140,7 +158,7 @@ export default function CategoryScreen() {
         items={items}
         cursor={cursor}
         scrollOffset={scrollOffset}
-        maxVisible={MAX_VISIBLE}
+        maxVisible={maxVisible}
         showSubcategory={showSubHeaders}
       />
 

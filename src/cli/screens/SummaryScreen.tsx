@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { formatSize } from "../../engine/size.js";
 import Footer from "../components/Footer.js";
 import Header from "../components/Header.js";
+import { exitApp } from "../exit.js";
 import { useAppState } from "../hooks/useAppState.js";
 import { COLORS } from "../theme.js";
 import {
@@ -35,8 +36,7 @@ export default function SummaryScreen() {
 
   useInput((input, key) => {
     if (input === "q" || input === "Q") {
-      console.log("\nThank you for using devcleaner, see you soon!\n");
-      process.exit(0);
+      exitApp();
     }
 
     if (key.upArrow) setCursorLocal((c) => Math.max(0, c - 1));
