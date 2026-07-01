@@ -12,10 +12,14 @@ export default function DoneScreen() {
 
   useEffect(() => {
     const t = setTimeout(() => {
-      exitApp();
+      const reclaimed = deletionReport?.totalReclaimed || 0;
+      const failed = deletionReport?.totalFailed || 0;
+      const total = deletionReport?.results.length || 0;
+      const succeeded = total - failed;
+      exitApp(0, { reclaimed, deleted: succeeded, failed });
     }, 2000);
     return () => clearTimeout(t);
-  }, []);
+  }, [deletionReport]);
 
   const reclaimed = deletionReport?.totalReclaimed || 0;
   const failed = deletionReport?.totalFailed || 0;
