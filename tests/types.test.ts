@@ -15,7 +15,11 @@ describe("types", () => {
     expect(ALL_CATEGORIES).toContain("android");
     expect(ALL_CATEGORIES).toContain("system");
     expect(ALL_CATEGORIES).toContain("misc");
-    expect(ALL_CATEGORIES).toHaveLength(10);
+    expect(ALL_CATEGORIES).toContain("unity");
+    expect(ALL_CATEGORIES).toContain("unreal");
+    expect(ALL_CATEGORIES).toContain("godot");
+    expect(ALL_CATEGORIES).toContain("video");
+    expect(ALL_CATEGORIES).toHaveLength(14);
   });
 
   it("ALL_SUBCATEGORIES has global and project", () => {

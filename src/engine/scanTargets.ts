@@ -28,8 +28,8 @@ export interface ScanTargetDef {
   /** restrict to an OS; omit to run on all platforms */
   platform?: Platform;
   maxDepth?: number;
-  /** optional directory validator (e.g. confirm a `target/` is really Rust) */
-  validate?: "rust-target";
+  /** optional directory validator: confirm a match really belongs to a toolchain/project */
+  validate?: "rust-target" | "unity-project" | "unreal-project" | "godot-project";
 }
 
 export interface CategoryDef {
@@ -980,6 +980,194 @@ export const SCAN_TARGETS = {
         safe: true,
         subcategory: "project",
         maxDepth: 5,
+      },
+    ],
+  },
+
+  unity: {
+    label: "Unity",
+    targets: [
+      {
+        name: "Unity Library",
+        description:
+          "Unity asset import cache. Regenerates on next editor open. Often very large.",
+        patterns: ["**/Library"],
+        baseDirs: ["{home}"],
+        risk: "medium",
+        safe: false,
+        subcategory: "project",
+        maxDepth: 5,
+        validate: "unity-project",
+      },
+      {
+        name: "Unity cache",
+        description: "Global Unity package/asset cache. Re-downloaded as needed.",
+        patterns: ["Unity/cache"],
+        baseDirs: ["{localAppData}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "win",
+      },
+      {
+        name: "Unity cache",
+        description: "Global Unity package/asset cache. Re-downloaded as needed.",
+        patterns: ["cache"],
+        baseDirs: ["{library}/Unity"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "darwin",
+      },
+      {
+        name: "Unity cache",
+        description: "Global Unity package/asset cache. Re-downloaded as needed.",
+        patterns: ["unity3d"],
+        baseDirs: ["{cache}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "linux",
+      },
+    ],
+  },
+
+  unreal: {
+    label: "Unreal Engine",
+    targets: [
+      {
+        name: "Unreal Intermediate",
+        description:
+          "UE build intermediates. Regenerates on next build. Can be very large.",
+        patterns: ["**/Intermediate"],
+        baseDirs: ["{home}"],
+        risk: "medium",
+        safe: true,
+        subcategory: "project",
+        maxDepth: 5,
+        validate: "unreal-project",
+      },
+      {
+        name: "Unreal DerivedDataCache",
+        description: "UE project derived data cache. Regenerates on demand.",
+        patterns: ["**/DerivedDataCache"],
+        baseDirs: ["{home}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "project",
+        maxDepth: 5,
+        validate: "unreal-project",
+      },
+      {
+        name: "Unreal global DDC",
+        description: "UE shared derived data cache.",
+        patterns: ["UnrealEngine/Common/DerivedDataCache"],
+        baseDirs: ["{localAppData}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "win",
+      },
+      {
+        name: "Unreal global DDC",
+        description: "UE shared derived data cache.",
+        patterns: ["Epic/UnrealEngine/Common/DerivedDataCache"],
+        baseDirs: ["{library}/Application Support"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "darwin",
+      },
+      {
+        name: "Unreal global DDC",
+        description: "UE shared derived data cache.",
+        patterns: ["Epic/UnrealEngine/Common/DerivedDataCache"],
+        baseDirs: ["{config}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "linux",
+      },
+    ],
+  },
+
+  godot: {
+    label: "Godot",
+    targets: [
+      {
+        name: "Godot import cache",
+        description: "Godot 4 .godot import cache. Regenerates on editor open.",
+        patterns: ["**/.godot"],
+        baseDirs: ["{home}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "project",
+        maxDepth: 5,
+        validate: "godot-project",
+      },
+      {
+        name: "Godot 3 import cache",
+        description: "Godot 3 .import cache. Regenerates on editor open.",
+        patterns: ["**/.import"],
+        baseDirs: ["{home}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "project",
+        maxDepth: 5,
+        validate: "godot-project",
+      },
+    ],
+  },
+
+  video: {
+    label: "Video editors",
+    targets: [
+      {
+        name: "After Effects disk cache",
+        description:
+          "AE rendered frame cache. Regenerated during playback/render.",
+        patterns: [
+          "Adobe/After Effects/Disk Cache",
+          "Adobe/After Effects/*/Disk Cache",
+        ],
+        baseDirs: ["{appData}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "win",
+      },
+      {
+        name: "After Effects disk cache",
+        description:
+          "AE rendered frame cache. Regenerated during playback/render.",
+        patterns: ["Adobe/After Effects"],
+        baseDirs: ["{library}/Caches"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "darwin",
+      },
+      {
+        name: "Adobe media cache",
+        description:
+          "Shared Adobe media cache (Premiere Pro / After Effects). Rebuilt on demand.",
+        patterns: ["Adobe/Common/Media Cache", "Adobe/Common/Media Cache Files"],
+        baseDirs: ["{appData}"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "win",
+      },
+      {
+        name: "Adobe media cache",
+        description:
+          "Shared Adobe media cache (Premiere Pro / After Effects). Rebuilt on demand.",
+        patterns: ["Adobe/Common/Media Cache", "Adobe/Common/Media Cache Files"],
+        baseDirs: ["{library}/Application Support"],
+        risk: "safe",
+        safe: true,
+        subcategory: "global",
+        platform: "darwin",
       },
     ],
   },

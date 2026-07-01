@@ -50,7 +50,7 @@ export default function HomeScreen() {
       </Box>
       <Box paddingLeft={1}>
         <Text dimColor>
-          targets, __pycache__, pip cache, VS Code data, etc.
+          targets, __pycache__, Unity/Unreal/Godot caches, VS Code data, etc.
         </Text>
       </Box>
 

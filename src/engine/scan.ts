@@ -67,19 +67,80 @@ function makeTokenExpander(paths: PlatformPaths) {
     p.replace(/\{[^}]+\}/g, (m) => tokens[m] ?? "");
 }
 
-async function isRustTarget(dirPath: string): Promise<boolean> {
+async function dirHasEntry(
+  dirPath: string,
+  predicate: (name: string) => boolean,
+): Promise<boolean> {
   try {
     const entries = await fs.readdir(dirPath);
-    return (
-      entries.includes("debug") ||
-      entries.includes("release") ||
-      entries.includes(".rustc_info.json") ||
-      entries.includes("CACHEDIR.TAG")
-    );
+    return entries.some(predicate);
   } catch {
     return false;
   }
 }
+
+async function hasEntryNamed(dirPath: string, name: string): Promise<boolean> {
+  return dirHasEntry(dirPath, (n) => n === name);
+}
+
+// Walk up from `start`, testing each ancestor (parent, grandparent, ...) for a
+// marker. Used so a nested match (e.g. UE `Saved/Logs`) still resolves to its
+// project root. Stops at the filesystem root or after `maxLevels`.
+async function walkUpForMarker(
+  start: string,
+  marker: (ancestor: string) => Promise<boolean>,
+  maxLevels = 8,
+): Promise<boolean> {
+  let current = path.resolve(start);
+  for (let i = 0; i < maxLevels; i++) {
+    const parent = path.dirname(current);
+    if (parent === current) break; // reached the filesystem root
+    if (await marker(parent)) return true;
+    current = parent;
+  }
+  return false;
+}
+
+async function isRustTarget(dirPath: string): Promise<boolean> {
+  return dirHasEntry(dirPath, (n) =>
+    n === "debug" ||
+    n === "release" ||
+    n === ".rustc_info.json" ||
+    n === "CACHEDIR.TAG",
+  );
+}
+
+// A dir is inside a Unity project if some ancestor has both `Assets` and
+// `ProjectSettings` (the canonical Unity project markers).
+async function isInsideUnityProject(dirPath: string): Promise<boolean> {
+  return walkUpForMarker(dirPath, async (ancestor) => {
+    if (!(await hasEntryNamed(ancestor, "Assets"))) return false;
+    return hasEntryNamed(ancestor, "ProjectSettings");
+  });
+}
+
+// A dir is inside an Unreal project if some ancestor contains a `.uproject`
+// file (which marks the UE project root).
+async function isInsideUnrealProject(dirPath: string): Promise<boolean> {
+  return walkUpForMarker(dirPath, (ancestor) =>
+    dirHasEntry(ancestor, (n) => n.endsWith(".uproject")),
+  );
+}
+
+// A dir is inside a Godot project if some ancestor contains a `project.godot`
+// file (the canonical Godot project marker).
+async function isInsideGodotProject(dirPath: string): Promise<boolean> {
+  return walkUpForMarker(dirPath, (ancestor) =>
+    hasEntryNamed(ancestor, "project.godot"),
+  );
+}
+
+const validators: Record<string, (dirPath: string) => Promise<boolean>> = {
+  "rust-target": isRustTarget,
+  "unity-project": isInsideUnityProject,
+  "unreal-project": isInsideUnrealProject,
+  "godot-project": isInsideGodotProject,
+};
 
 export interface ScanProgress {
   phase: string;
@@ -123,6 +184,8 @@ async function runScan(
       const baseDir = expandToken(rawBase);
       if (!baseDir || !(await fs.pathExists(baseDir))) continue;
 
+      const validator = target.validate ? validators[target.validate] : undefined;
+
       try {
         const isLiteral =
           target.patterns.length > 0 &&
@@ -136,7 +199,7 @@ async function runScan(
             const stat = await fs.stat(fullPath);
             if (!stat.isDirectory()) continue;
 
-            if (target.validate === "rust-target" && !(await isRustTarget(fullPath))) {
+            if (validator && !(await validator(fullPath))) {
               continue;
             }
 
@@ -174,7 +237,7 @@ async function runScan(
           for (const match of matches) {
             const normalPath = path.normalize(match);
 
-            if (target.validate === "rust-target" && !(await isRustTarget(normalPath))) {
+            if (validator && !(await validator(normalPath))) {
               continue;
             }
 

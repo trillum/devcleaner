@@ -55,6 +55,10 @@ Every item is marked with a risk level so you know what is safe to remove and wh
 - **Java** - Maven repo, Gradle caches, Gradle wrapper dists, Ivy cache
 - **Swift** - Xcode DerivedData, DeviceSupport, simulator caches, SwiftPM, CocoaPods
 - **Android** - Android Studio cache
+- **Unity** - project `Library` import cache, global Unity package/asset cache
+- **Unreal Engine** - project `Intermediate` build folders, `DerivedDataCache`, shared global DDC
+- **Godot** - `.godot` (Godot 4) and `.import` (Godot 3) import caches
+- **Video editors** - After Effects disk cache, shared Adobe media cache (Premiere Pro / After Effects)
 - **System** - VS Code data/cache/logs, Temp folder, Trash, Homebrew cache, Chrome, Edge, and Firefox cache
 - **Misc** - `.cache`, `dist`, `build`, `out`, sass cache
 
