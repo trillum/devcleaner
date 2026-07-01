@@ -30,12 +30,47 @@ export interface ScanTargetDef {
   maxDepth?: number;
   /** optional directory validator: confirm a match really belongs to a toolchain/project */
   validate?: "rust-target" | "unity-project" | "unreal-project" | "godot-project";
+  /**
+   * Per-target glob/path exclusions. For traversal (glob) targets these are
+   * passed to fast-glob's `ignore`; for literal targets they are matched as
+   * path fragments. Use these to skip a specific sub-tree this target would
+   * otherwise match (e.g. a `node_modules` inside an editor extensions dir).
+   */
+  exclude?: string[];
 }
 
 export interface CategoryDef {
   label: string;
   targets: ScanTargetDef[];
 }
+
+/**
+ * Paths that must NEVER be touched by traversal-based (glob) scans, even though
+ * they may contain matching folders like `node_modules`, `dist` or `build`.
+ * These are application/toolchain installs whose deletion breaks the tool
+ * itself (e.g. wiping a VS Code extension's bundled deps, or pnpm's global
+ * install).
+ *
+ * Applied only to glob targets. Literal cache targets (e.g. the pnpm *store*)
+ * still run, since those point at a single re-creatable cache folder by design.
+ */
+export const GLOBAL_EXCLUDES: string[] = [
+  // Editor / IDE extension installs: their bundled node_modules/build/dist
+  // must not be touched or the extensions break.
+  "**/.vscode/extensions/**",
+  "**/.vscode-insiders/extensions/**",
+  "**/.vscode-server/extensions/**",
+  "**/.vscode-oss/extensions/**",
+  "**/.cursor/extensions/**",
+  // Package manager installs / global installs: traversal scans must not
+  // descend into these or the toolchain and its globally installed packages
+  // get wiped. Explicit cache targets (pnpm store, npm-cache, ...) are
+  // unaffected since they are literal, not globbed.
+  "**/AppData/Local/pnpm/**",
+  "**/AppData/Roaming/npm/**",
+  "**/AppData/Local/Yarn/**",
+  "**/Library/pnpm/**",
+];
 
 export const SCAN_TARGETS = {
   node: {

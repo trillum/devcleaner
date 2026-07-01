@@ -6,6 +6,7 @@ import { render } from "ink";
 import App from "./app.js";
 import { parseArgs } from "./cli/args.js";
 import Centered from "./cli/components/Centered.js";
+import { setAppUnmount } from "./cli/exit.js";
 import { AppStateProvider } from "./cli/hooks/useAppState.js";
 
 const args = parseArgs(process.argv);
@@ -37,10 +38,15 @@ const scanOptions = {
 // clear screen + scrollback and move cursor home before starting the TUI
 process.stdout.write("\x1B[2J\x1B[3J\x1B[H");
 
-render(
+const instance = render(
   <AppStateProvider scanOptions={scanOptions}>
     <Centered>
       <App />
     </Centered>
   </AppStateProvider>,
 );
+
+// let exitApp() restore the terminal (raw mode off, final frame cleared) before
+// the process is torn down, which avoids the Windows "system cannot find the
+// path specified." error on quit
+setAppUnmount(() => instance.unmount());

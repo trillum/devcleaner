@@ -13,9 +13,15 @@ import {
 } from "./drives.js";
 import {
   getScanTargetsForPlatform,
+  GLOBAL_EXCLUDES,
   type ResolvedScanTarget,
 } from "./scanTargets.js";
 import { getDirSize } from "./size.js";
+
+// Built-in ignores applied to every traversal (glob) scan in addition to the
+// per-target `exclude` and GLOBAL_EXCLUDES. Keeps nested dep trees and git
+// metadata out of results.
+const DEFAULT_IGNORE = ["**/node_modules/**/node_modules", "**/.git"];
 
 interface PlatformPaths {
   home: string;
@@ -142,6 +148,27 @@ const validators: Record<string, (dirPath: string) => Promise<boolean>> = {
   "godot-project": isInsideGodotProject,
 };
 
+// Checks a resolved literal path against a target's `exclude` list. Entries are
+// treated as path fragments (e.g. `.vscode/extensions`) and matched on path
+// segments so `foo/.vscode` never false-matches `my.vscode/extensions`.
+function pathIsExcluded(fullPath: string, excludes: string[] | undefined): boolean {
+  if (!excludes || excludes.length === 0) return false;
+  const normalized = path.resolve(fullPath).toLowerCase();
+  const sep = path.sep.toLowerCase();
+  for (const raw of excludes) {
+    // strip glob stars so the same entries used for glob targets work here too
+    const fragment = raw.replace(/^\*\*\//, "").replace(/\/\*\*$/, "");
+    if (!fragment) continue;
+    const needle = fragment.toLowerCase();
+    const idx = normalized.indexOf(needle);
+    if (idx === -1) continue;
+    // require a segment boundary (start of path or a separator) before the match
+    const before = idx === 0 ? "" : normalized[idx - 1];
+    if (idx === 0 || before === sep) return true;
+  }
+  return false;
+}
+
 export interface ScanProgress {
   phase: string;
   found: number;
@@ -199,6 +226,8 @@ async function runScan(
             const stat = await fs.stat(fullPath);
             if (!stat.isDirectory()) continue;
 
+            if (pathIsExcluded(fullPath, target.exclude)) continue;
+
             if (validator && !(await validator(fullPath))) {
               continue;
             }
@@ -231,11 +260,13 @@ async function runScan(
             followSymbolicLinks: false,
             suppressErrors: true,
             dot: true,
-            ignore: ["**/node_modules/**/node_modules", "**/.git"],
+            ignore: [...DEFAULT_IGNORE, ...GLOBAL_EXCLUDES, ...(target.exclude ?? [])],
           });
 
           for (const match of matches) {
             const normalPath = path.normalize(match);
+
+            if (pathIsExcluded(normalPath, target.exclude)) continue;
 
             if (validator && !(await validator(normalPath))) {
               continue;
